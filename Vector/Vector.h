@@ -14,10 +14,20 @@ public:
 		, _endofstorage(nullptr)
 	{}
 	Vector(const Vector<T>& v)
-		:_start(v._start)
-		,_finish(v._finish)
-		,_capacity(v._endofstorage)
-	{}
+		:_start(nullptr)
+		,_finish(nullptr)
+		,_endofstorage(nullptr)
+	{
+		Reserve(v.Size());
+		for (size_t i = 0; i < size; ++i)
+		{
+			//内置类型会调用memcpy,自定义类型会调用swap()
+			//memcpy(_start, v._start, sizeof(T)*v.Size());
+
+			swap(tmp[i],_str[i])    
+		}
+		_finish = _start + v.Size();
+	}
 
 	iterator begin()
 	{
@@ -49,16 +59,33 @@ public:
 		if (pos < Size())
 			return _start[pos];
 	}
+	void Swap(Vector<T>& v)
+	{
+		swap(_start, v._start);
+		swap(_finish, v._finish);
+		swap(_endofstorage, v._endofstorage);
+	}
+	Vector<T>& operator=(Vector<T> v)
+	{
+		Swap(v);
+		return *this;
+	}
+	void Reserve(size_t n);
+	void Resize(size_t n, const T& val = T());
+	void PushBack(const T& data);
+	void PopBack();
+	void Insert(iterator pos, const T& data);
+	iterator Erase(iterator pos);
 	~Vector()
 	{
 		if (_start)
 		{
 			free(_start);
-			_finish = _capacity = nullptr;
+			_start = _finish = _endofstorage = nullptr;
 		}
 	}
 private:
-	T* _start;
+	T* _start;   //数组
 	T* _finish;
 	T* _endofstorage;
 };
