@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <assert.h>
 using namespace std;
 
 template <class T>
@@ -24,11 +25,10 @@ public:
 			//内置类型会调用memcpy,自定义类型会调用swap()
 			//memcpy(_start, v._start, sizeof(T)*v.Size());
 
-			swap(tmp[i],_str[i])    
+			swap(_start[i],v[i]);
 		}
 		_finish = _start + v.Size();
 	}
-
 	iterator begin()
 	{
 		return _start;
@@ -89,3 +89,4 @@ private:
 	T* _finish;
 	T* _endofstorage;
 };
+void TestVector();

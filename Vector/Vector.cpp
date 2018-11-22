@@ -3,9 +3,9 @@
 template <class T>
 void Vector<T>::Reserve(size_t n)
 {
-	if (n > _endofstorage)
+	if (n > Capacity())
 	{
-		T* tmp = new T[n + 1];
+		T* tmp = new T[n];
 		size_t size = Size();
 		if (_start)
 		{
@@ -70,7 +70,7 @@ void Vector<T>::Insert(iterator pos, const T& data)
 	{
 		//更新之前保存原来的位置，避免出现再次插入找到的位置不是原来的位置
 		size_t size = Size();
-		size_t NewCapacity = _endofstorage == 0 ? 2 : _endofstorage * 2;
+		size_t NewCapacity = Capacity() == 0 ? 2 : Capacity() * 2;
 
 		//如果发生增容，更新 pos 位置
 		Reserve(NewCapacity);
@@ -85,8 +85,75 @@ void Vector<T>::Insert(iterator pos, const T& data)
 	*pos = data;
 	++_finish;
 }
-//template <class T>
-//Vector<T>::iterator Vector<T>::Erase(iterator pos)
-//{
-//
-//}
+
+//返回删除pos位置的下一个数据
+Vector<int>::iterator Vector<int>::Erase(iterator pos)
+{
+	iterator begin = pos + 1;
+	while (begin != end())
+	{
+		*(begin - 1) = *begin;
+		++begin;
+	}
+	--_finish;
+	return pos;
+}
+
+
+void TestVector()
+{
+	Vector<int> v;
+	v.PushBack(1);
+	v.PushBack(2);
+	v.PushBack(3);
+	v.PushBack(4);
+	v.PushBack(5);
+
+	cout << "Size(): " << v.Size() << endl;
+	cout << "Capacity(): " << v.Capacity() << endl;
+
+	for (auto e : v)
+	{
+		cout << e << " ";
+	}
+	cout << endl;
+
+	//v.Reserve(10);
+	//cout << "Size(): " << v.Size() << endl;
+	//cout << "Capacity(): " << v.Capacity() << endl;
+
+	//v.PopBack();
+
+	//cout << "Size(): " << v.Size() << endl;
+	//cout << "Capacity(): " << v.Capacity() << endl;
+
+	//for (auto e : v)
+	//{
+	//	cout << e << " ";
+	//}
+	//cout << endl;
+
+	Vector<int>::iterator pos = find(v.begin(), v.end(), 3);
+	v.Insert(pos, 6);
+	Vector<int>::iterator It = v.begin();
+	while (It != v.end())
+	{
+		cout << *It<<" ";
+		++It;
+	}
+	cout << endl;
+	pos = find(v.begin(), v.end(), 2);
+	Vector<int>::iterator it = v.begin();
+	while (it != v.end())
+	{
+		if (*it % 2 == 0)
+		{
+			it = v.Erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
+	cout << endl;
+}
