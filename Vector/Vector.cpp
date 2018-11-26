@@ -99,7 +99,7 @@ Vector<int>::iterator Vector<int>::Erase(iterator pos)
 	return pos;
 }
 
-
+/*
 void TestVector()
 {
 	Vector<int> v;
@@ -157,3 +157,4 @@ void TestVector()
 	}
 	cout << endl;
 }
+*/
