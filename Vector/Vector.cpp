@@ -57,38 +57,41 @@ void Vector<T>::PushBack(const T& data)
 template <class T>
 void Vector<T>::PopBack()
 {
-	Erase(_finish);
+	Erase(_finish-1);
 }
 template <class T>
-void Vector<T>::Insert(iterator pos, const T& data)
+void Vector<T>::Insert(iterator& pos, const T& data)
 {
 	assert(pos <= _finish);
+
 
 	size_t offset = pos - _start;
 	//先判断空间是否足够
 	if (_finish == _endofstorage)
 	{
 		//更新之前保存原来的位置，避免出现再次插入找到的位置不是原来的位置
-		size_t size = Size();
 		size_t NewCapacity = Capacity() == 0 ? 2 : Capacity() * 2;
 
 		//如果发生增容，更新 pos 位置
 		Reserve(NewCapacity);
-		pos = _start + size;
+		pos = _start + offset;
 	}
 	iterator end = _finish;
 	while (end >= pos)
 	{
-		*end = *(end + 1);
+		*end = *(end - 1);
 		--end;
 	}
 	*pos = data;
 	++_finish;
+	//解决迭代器失效
+	//++pos;
 }
 
 //返回删除pos位置的下一个数据
 Vector<int>::iterator Vector<int>::Erase(iterator pos)
 {
+	assert(pos < _finish);
 	iterator begin = pos + 1;
 	while (begin != end())
 	{
@@ -99,7 +102,6 @@ Vector<int>::iterator Vector<int>::Erase(iterator pos)
 	return pos;
 }
 
-/*
 void TestVector()
 {
 	Vector<int> v;
@@ -111,50 +113,35 @@ void TestVector()
 
 	cout << "Size(): " << v.Size() << endl;
 	cout << "Capacity(): " << v.Capacity() << endl;
-
-	for (auto e : v)
+	//语法糖遍历
+	for (const auto& e : v)
 	{
 		cout << e << " ";
 	}
 	cout << endl;
 
-	//v.Reserve(10);
-	//cout << "Size(): " << v.Size() << endl;
-	//cout << "Capacity(): " << v.Capacity() << endl;
-
-	//v.PopBack();
-
-	//cout << "Size(): " << v.Size() << endl;
-	//cout << "Capacity(): " << v.Capacity() << endl;
-
-	//for (auto e : v)
-	//{
-	//	cout << e << " ";
-	//}
-	//cout << endl;
-
-	Vector<int>::iterator pos = find(v.begin(), v.end(), 3);
-	v.Insert(pos, 6);
-	Vector<int>::iterator It = v.begin();
-	while (It != v.end())
+	v.PopBack();
+	for (const auto& e : v)
 	{
-		cout << *It<<" ";
-		++It;
+		cout << e << " ";
 	}
 	cout << endl;
-	pos = find(v.begin(), v.end(), 2);
-	Vector<int>::iterator it = v.begin();
-	while (it != v.end())
+	//TestErase
+	auto eit = v.begin();
+	while (eit != v.end())
 	{
-		if (*it % 2 == 0)
+		if (*eit % 2 == 0)
 		{
-			it = v.Erase(it);
+			eit = v.Erase(eit);
 		}
 		else
 		{
-			++it;
+			++eit;
 		}
+	}
+	for (const auto& e2 : v)
+	{
+		cout << e2 << " ";
 	}
 	cout << endl;
 }
-*/

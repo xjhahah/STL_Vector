@@ -9,6 +9,7 @@ class Vector
 {
 public:
 	typedef T* iterator;
+	typedef const T* const_iterator;
 	Vector()
 		:_start(nullptr)
 		,_finish(nullptr)
@@ -38,7 +39,16 @@ public:
 	{
 		return _finish;
 	}
+	//constµü´úÆ÷
+	const_iterator cbegin()const
+	{
+		return _start;
+	}
 
+	const_iterator cend()const
+	{
+		return _finish;
+	}
 	size_t Size()const
 	{
 		return _finish - _start;
@@ -74,13 +84,13 @@ public:
 	void Resize(size_t n, const T& val = T());
 	void PushBack(const T& data);
 	void PopBack();
-	void Insert(iterator pos, const T& data);
+	void Insert(iterator& pos, const T& data);
 	iterator Erase(iterator pos);
 	~Vector()
 	{
 		if (_start)
 		{
-			free(_start);
+			delete[] _start;
 			_start = _finish = _endofstorage = nullptr;
 		}
 	}
