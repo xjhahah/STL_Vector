@@ -35,18 +35,19 @@ void Vector<T>::Resize(size_t n, const T& val)
 		_finish = _start + n;
 		return;
 	}
-	//如果空间不够，增容
-	if (n > Capacity())
+	else
 	{
-		Reserve(n);
-	}
-	//将增加的空间值赋成val
-	iterator it = _finish;
-	iterator _finish = _start + n;
-	if (it != _finish)
-	{
-		*it = val;
-		++it;
+		if (n > Capacity())
+		{
+			Reserve(n);
+		}
+		iterator begin = _finish;
+		while (begin < _start + n)
+		{
+			*begin = val;
+			++begin;
+		}
+		_finish = _start + n;
 	}
 }
 template <class T>
